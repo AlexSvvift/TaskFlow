@@ -1,0 +1,11 @@
+services:
+  taskflow:
+    build: .
+    container_name: taskflow
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TaskFlow</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div id="toast" class="toast" hidden></div>
+
+    <section id="auth-view" class="auth-layout">
+      <div class="auth-intro">
+        <div class="brand"><span class="brand-mark">T</span><span>TaskFlow</span></div>
+        <p class="eyebrow">CLIENTS & ORDERS</p>
+        <h1>Работа с клиентами без хаоса.</h1>
+        <p class="intro-copy">Единое рабочее пространство для команды, клиентов и заказов.</p>
+        <div class="feature-line"><span>01</span><b>Клиенты</b><small>Контакты и заметки в одном месте</small></div>
+        <div class="feature-line"><span>02</span><b>Заказы</b><small>Статусы, суммы и текущая загрузка</small></div>
+        <div class="feature-line"><span>03</span><b>Контроль</b><small>Роли и защищенный API</small></div>
+      </div>
+
+      <div class="auth-card">
+        <div class="auth-tabs">
+          <button class="tab-button active" data-auth-tab="login" type="button">Войти</button>
+          <button class="tab-button" data-auth-tab="register" type="button">Регистрация</button>
+        </div>
+        <form id="login-form" class="auth-form">
+          <h2>С возвращением</h2>
+          <p class="muted">Введи данные, чтобы открыть рабочее пространство.</p>
+          <label>Email<input name="email" type="email" placeholder="you@example.com" required /></label>
+          <label>Пароль<input name="password" type="password" placeholder="Минимум 8 символов" required /></label>
+          <button class="button primary" type="submit">Войти</button>
+        </form>
+        <form id="register-form" class="auth-form" hidden>
+          <h2>Создать аккаунт</h2>
+          <p class="muted">Первый пользователь получает роль администратора.</p>
+          <label>Имя<input name="full_name" placeholder="Алексей Смирнов" required minlength="2" /></label>
+          <label>Email<input name="email" type="email" placeholder="you@example.com" required /></label>
+          <label>Пароль<input name="password" type="password" placeholder="Минимум 8 символов" required minlength="8" /></label>
+          <button class="button primary" type="submit">Создать аккаунт</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="app-view" hidden>
+      <header class="topbar">
+        <div class="brand"><span class="brand-mark">T</span><span>TaskFlow</span></div>
+        <div class="topbar-actions"><span id="current-user" class="user-chip"></span><button id="logout-button" class="button ghost" type="button">Выйти</button></div>
+      </header>
+
+      <main class="shell">
+        <section class="page-heading">
+          <div><p class="eyebrow">WORKSPACE OVERVIEW</p><h1>Добрый день, <span id="user-name">коллега</span>.</h1><p class="muted">Вот что происходит в работе прямо сейчас.</p></div>
+          <button id="refresh-button" class="button ghost" type="button">Обновить</button>
+        </section>
+
+        <section class="stats">
+          <article class="stat-card"><span class="stat-label">Клиенты</span><strong id="clients-count">0</strong><span class="stat-note">в базе</span></article>
+          <article class="stat-card accent"><span class="stat-label">Всего заказов</span><strong id="orders-count">0</strong><span class="stat-note">по всем статусам</span></article>
+          <article class="stat-card warning"><span class="stat-label">В работе</span><strong id="active-count">0</strong><span class="stat-note">нужны действия</span></article>
+          <article class="stat-card success"><span class="stat-label">Выручка</span><strong id="revenue-count">0 ₽</strong><span class="stat-note">завершенные заказы</span></article>
+        </section>
+
+        <section class="workspace-grid">
+          <article class="panel">
+            <div class="section-heading"><div><p class="eyebrow">CLIENTS</p><h2>Новый клиент</h2></div><span class="panel-icon">+</span></div>
+            <form id="client-form" class="stack-form">
+              <label>Имя клиента<input name="name" placeholder="Иван Петров" required /></label>
+              <label>Компания<input name="company" placeholder="ООО «Север»" /></label>
+              <div class="form-row"><label>Email<input name="email" type="email" placeholder="client@example.com" /></label><label>Телефон<input name="phone" placeholder="+7 900 000-00-00" /></label></div>
+              <label>Заметка<textarea name="notes" rows="3" placeholder="Что важно помнить о клиенте"></textarea></label>
+              <button class="button primary" type="submit">Добавить клиента</button>
+            </form>
+          </article>
+
+          <article class="panel clients-panel"><div class="section-heading"><div><p class="eyebrow">DIRECTORY</p><h2>Клиенты</h2></div><span id="clients-total" class="count-label">0</span></div><div id="clients-list" class="list"></div></article>
+        </section>
+
+        <section class="orders-section">
+          <div class="section-heading"><div><p class="eyebrow">ORDERS PIPELINE</p><h2>Заказы</h2></div><span id="orders-total" class="count-label">0</span></div>
+          <div class="orders-layout">
+            <form id="order-form" class="order-form">
+              <label>Клиент<select name="client_id" id="client-select" required><option value="">Сначала добавь клиента</option></select></label>
+              <label>Название заказа<input name="title" placeholder="Сайт для компании" required /></label>
+              <label>Сумма, ₽<input name="amount" type="number" min="0" step="0.01" value="0" /></label>
+              <label>Описание<textarea name="description" rows="3" placeholder="Что нужно сделать"></textarea></label>
+              <button class="button primary" type="submit">Создать заказ</button>
+            </form>
+            <div id="orders-list" class="orders-list"></div>
+          </div>
+        </section>
+      </main>
+    </section>
+
+    <template id="client-template"><div class="client-item"><div class="avatar"></div><div><strong class="client-name"></strong><span class="client-meta"></span></div></div></template>
+    <template id="order-template"><article class="order-item"><div class="order-main"><span class="order-status"></span><h3 class="order-title"></h3><p class="order-client"></p></div><div class="order-side"><strong class="order-amount"></strong><button class="status-button" type="button"></button></div></article></template>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
